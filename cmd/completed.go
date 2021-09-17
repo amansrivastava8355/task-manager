@@ -17,7 +17,7 @@ package cmd
 
 import (
 	"fmt"
-	"time"
+	
 	"github.com/spf13/cobra"
 )
 
@@ -32,8 +32,8 @@ var completedCmd = &cobra.Command{
 		// 	intervelhour = "24";
 		// }
 		db := dbConn()
-		currentTime := time.Now()
-		selDB, err := db.Query("SELECT * FROM tasks where status=1 && created > ? - interval 24 hour;", currentTime)
+		
+		selDB, err := db.Query("SELECT * FROM tasks where datetime(completedAt) >= datetime('now', '-12 Hour') AND datetime(completedAt) <= datetime('now', '+12 Hour')")
 		
 		if err != nil {
 			panic(err.Error())

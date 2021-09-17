@@ -16,8 +16,8 @@ limitations under the License.
 package cmd
 
 import (
-	// "fmt"
-	// "time"
+	"fmt"
+	"time"
 	"github.com/spf13/cobra"
 )
 
@@ -28,32 +28,33 @@ var doCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		id, _:= cmd.Flags().GetString("id")
-		// currentTime := time.Now()
+		currentTime := time.Now()
 		if id == "" {
 			panic("please provide id of task ");
 		}
 		db := dbConn()
-		insForm, err := db.Prepare("UPDATE tasks SET status=?  WHERE id=?")
+		insForm, err := db.Exec("UPDATE tasks SET status=? , completedAt=? WHERE id=?", "1", currentTime, id)
         if err != nil {
             panic(err.Error())
+			fmt.Println(insForm);
         }
-        insForm.Exec("1", id)
+        
 
-		// selDB, err := db.Query("SELECT * FROM tasks WHERE id=?", id)
-		// if err != nil {
-		// 	panic(err.Error())
-		// }
-		// for selDB.Next() {
-		// 	var task Task
-		// 	err = selDB.Scan(&task.id, &task.taskname, &task.status, &task.completedAt)
-		// 	if err != nil {
-		// 		panic(err.Error())
-		// 	}
+		selDB, err := db.Query("SELECT * FROM tasks WHERE id=?", id)
+		if err != nil {
+			panic(err.Error())
+		}
+		for selDB.Next() {
+			var task Task
+			err = selDB.Scan(&task.id, &task.taskname, &task.status, &task.completedAt)
+			if err != nil {
+				panic(err.Error())
+			}
 			
-		// 	taskname := task.taskname
-		// 	fmt.Println(`You have completed the "`+taskname+`" task.`)
+			taskname := task.taskname
+			fmt.Println(`You have completed the "`+taskname+`" task.`)
 			
-		// }
+		}
 		
 	},
 }

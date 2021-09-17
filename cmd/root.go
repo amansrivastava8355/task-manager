@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/viper"
 	"database/sql"
 
-    _ "github.com/go-sql-driver/mysql"
+    _ "github.com/mattn/go-sqlite3"
 )
 
 var cfgFile string
@@ -38,11 +38,12 @@ type Task struct {
 }
 
 func dbConn() (db *sql.DB) {
-    dbDriver := "mysql"
-    dbUser := "root"
-    dbPass := "lenovo12"
-    dbName := "golang"
-    db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+    dbDriver := "sqlite3"
+    // dbUser := "root"
+    // dbPass := "lenovo12"
+    dbName := "./golang.db"
+
+    db, err := sql.Open(dbDriver, dbName)
     if err != nil {
         panic(err.Error())
     }
