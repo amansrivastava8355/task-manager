@@ -17,7 +17,7 @@ package cmd
 
 import (
 	"fmt"
-	
+
 	"github.com/spf13/cobra"
 )
 
@@ -25,16 +25,16 @@ import (
 var completedCmd = &cobra.Command{
 	Use:   "completed",
 	Short: "List of completed tasks",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		// intervelhour, _:= cmd.Flags().GetString("intervel")
 		// if intervelhour == "" {
 		// 	intervelhour = "24";
 		// }
 		db := dbConn()
-		
+
 		selDB, err := db.Query("SELECT * FROM tasks where datetime(completedAt) >= datetime('now', '-12 Hour') AND datetime(completedAt) <= datetime('now', '+12 Hour')")
-		
+
 		if err != nil {
 			panic(err.Error())
 		}
@@ -45,24 +45,14 @@ var completedCmd = &cobra.Command{
 			if err != nil {
 				panic(err.Error())
 			}
-			
+
 			taskname := task.taskname
-			fmt.Println("- "+taskname)
+			fmt.Println("- " + taskname)
 		}
-		
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(completedCmd)
-	
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// completedCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// completedCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

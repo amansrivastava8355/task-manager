@@ -17,20 +17,20 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 )
-
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all of your incomplete tasks",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		db := dbConn()
-		
+
 		selDB, err := db.Query("SELECT * FROM tasks where status=0")
-		
+
 		if err != nil {
 			panic(err.Error())
 		}
@@ -43,16 +43,12 @@ var listCmd = &cobra.Command{
 			}
 			taskid := task.id
 			taskname := task.taskname
-			fmt.Println(taskid+" "+taskname)
+			fmt.Println(taskid + " " + taskname)
 		}
-		
+
 	},
-	
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	
 }
-
-

@@ -18,12 +18,14 @@ package cmd
 import (
 	"fmt"
 	"os"
+
 	"github.com/spf13/cobra"
 
-	"github.com/spf13/viper"
 	"database/sql"
 
-    _ "github.com/mattn/go-sqlite3"
+	"github.com/spf13/viper"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var cfgFile string
@@ -31,37 +33,31 @@ var cfgFile string
 var db *sql.DB
 
 type Task struct {
-    id    string
-    taskname  string
-    status int
-	completedAt  sql.NullString 
+	id          string
+	taskname    string
+	status      int
+	completedAt sql.NullString
 }
 
 func dbConn() (db *sql.DB) {
-    dbDriver := "sqlite3"
-    // dbUser := "root"
-    // dbPass := "lenovo12"
-    dbName := "./golang.db"
+	dbDriver := "sqlite3"
+	// dbUser := "root"
+	// dbPass := "lenovo12"
+	dbName := "./golang.db"
 
-    db, err := sql.Open(dbDriver, dbName)
-    if err != nil {
-        panic(err.Error())
-    }
-	
-    return db
+	db, err := sql.Open(dbDriver, dbName)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return db
 }
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "task",
 	Short: "task is a CLI for managing your TODOs.",
-	Long: ``,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-	// RunE: func(cmd *cobra.Command, args []string) error {
-	// 	return errors.New("Provide item to the say command")
-	// },
+	Long:  ``,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -25,12 +25,12 @@ import (
 var rmCmd = &cobra.Command{
 	Use:   "rm",
 	Short: "delete your task",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		id, _:= cmd.Flags().GetString("id")
-		
+		id, _ := cmd.Flags().GetString("id")
+
 		if id == "" {
-			panic("please provide id of task ");
+			panic("please provide id of task ")
 		}
 		db := dbConn()
 		selDB, err := db.Query("SELECT * FROM tasks WHERE id=?", id)
@@ -43,10 +43,10 @@ var rmCmd = &cobra.Command{
 			if err != nil {
 				panic(err.Error())
 			}
-			
+
 			taskname := task.taskname
-			fmt.Println(`You have deleted the "`+taskname+`" task.`)
-			
+			fmt.Println(`You have deleted the "` + taskname + `" task.`)
+
 		}
 		delForm, err := db.Prepare("DELETE FROM tasks WHERE id=?")
 		if err != nil {
@@ -59,13 +59,4 @@ var rmCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(rmCmd)
 	rmCmd.Flags().StringP("id", "i", "", "id of the task")
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// rmCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// rmCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
