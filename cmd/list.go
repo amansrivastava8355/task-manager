@@ -21,31 +21,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func listCommand(cmd *cobra.Command, args []string) {
+	db := dbConn()
+
+	selDB, err := db.Query("SELECT * FROM tasks where status=0")
+
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("You have the following tasks:")
+	for selDB.Next() {
+		var task Task
+		err = selDB.Scan(&task.id, &task.taskname, &task.status, &task.completedAt)
+		if err != nil {
+			panic(err.Error())
+		}
+		taskid := task.id
+		taskname := task.taskname
+		fmt.Println(taskid + ". " + taskname)
+	}
+
+}
+
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all of your incomplete tasks",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		db := dbConn()
-
-		selDB, err := db.Query("SELECT * FROM tasks where status=0")
-
-		if err != nil {
-			panic(err.Error())
-		}
-		fmt.Println("You have the following tasks:")
-		for selDB.Next() {
-			var task Task
-			err = selDB.Scan(&task.id, &task.taskname, &task.status, &task.completedAt)
-			if err != nil {
-				panic(err.Error())
-			}
-			taskid := task.id
-			taskname := task.taskname
-			fmt.Println(taskid + " " + taskname)
-		}
-
+		listCommand(cmd, args)
 	},
 }
 

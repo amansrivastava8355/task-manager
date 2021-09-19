@@ -21,26 +21,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func addCommand(cmd *cobra.Command, args []string) {
+	name, _ := cmd.Flags().GetString("string")
+
+	if name == "" {
+		panic("please provide task title")
+	}
+	db := dbConn()
+
+	stmt, err := db.Prepare("INSERT INTO tasks(taskname, status) VALUES(?, ?);")
+	if err != nil {
+		panic(err.Error())
+	}
+	stmt.Exec(name, 0)
+
+	fmt.Println(`Added "` + name + `" to your task list.`)
+}
+
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a new task to your TODO list",
 	Long:  `Add a new task to your TODO list`,
 	Run: func(cmd *cobra.Command, args []string) {
-		name, _ := cmd.Flags().GetString("string")
-
-		if name == "" {
-			panic("please provide task title")
-		}
-		db := dbConn()
-
-		stmt, err := db.Prepare("INSERT INTO tasks(taskname, status) VALUES(?, ?);")
-		if err != nil {
-			panic(err.Error())
-		}
-		stmt.Exec(name, 0)
-
-		fmt.Println(`Added "` + name + `" to your task list.`)
+		addCommand(cmd, args)
 	},
 }
 
